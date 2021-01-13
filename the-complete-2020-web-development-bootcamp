@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Create the workspace
+mkdir /mnt/c/Users/FINIX/Documents/Workspace/the-complete-2020-web-development-bootcamp/
+
+# Go to the workspace
+cd /mnt/c/Users/FINIX/Documents/Workspace/the-complete-2020-web-development-bootcamp/
+
+# Create the temp file to store the branches
+touch /home/finix/the-complete-2020-web-development-bootcamp.txt
+
+# Clone the repo
+git clone https://github.com/JoeFinixCode/The-Complete-2020-Web-Development-Bootcamp.git
+
+# Going to the downloaded repo
+cd /mnt/c/Users/FINIX/Documents/Workspace/the-complete-2020-web-development-bootcamp/The-Complete-2020-Web-Development-Bootcamp/
+
+# check the list from the remote repo and save them on a file
+git branch -r | tee -a /home/finix/the-complete-2020-web-development-bootcamp.txt
+
+# Code below removes    origin/HEAD -> origin/main
+sed -i -e "/origin\/HEAD -> origin\//d" /home/finix/the-complete-2020-web-development-bootcamp.txt /home/finix/the-complete-2020-web-development-bootcamp.txt
+
+# Code below removes main
+sed -i -e "/main/d" /home/finix/the-complete-2020-web-development-bootcamp.txt /home/finix/the-complete-2020-web-development-bootcamp.txt
+
+# Code below removes "  origin/"
+cat /home/finix/the-complete-2020-web-development-bootcamp.txt | cut -c 10- | tee /home/finix/the-complete-2020-web-development-bootcamp.txt
+
+# Go to the workspace
+cd /mnt/c/Users/FINIX/Documents/Workspace/the-complete-2020-web-development-bootcamp/
+
+# Remove the generated folder
+rm -rf The-Complete-2020-Web-Development-Bootcamp
+
+while [ -s /home/finix/the-complete-2020-web-development-bootcamp.txt ]; do
+    # prints the action that the repo is about to be cloned
+    echo -n "Cloning " && sed -n 1p /home/finix/the-complete-2020-web-development-bootcamp.txt
+    # command result to variable
+    branch_name=`sed -n 1p /home/finix/the-complete-2020-web-development-bootcamp.txt`
+	#clone one branch from the top of the remote repo list
+    echo "$branch_name"
+    git clone -b $branch_name https://github.com/JoeFinixCode/The-Complete-2020-Web-Development-Bootcamp.git
+	#renaming the folder using the branch name
+    mv /mnt/c/Users/FINIX/Documents/Workspace/the-complete-2020-web-development-bootcamp/The-Complete-2020-Web-Development-Bootcamp /mnt/c/Users/FINIX/Documents/Workspace/the-complete-2020-web-development-bootcamp/$branch_name
+    #code below deletes the first line
+    sed -i '1d' /home/finix/the-complete-2020-web-development-bootcamp.txt
+	#remove the downloaded branch from the list
+done
+rm -rf /home/finix/the-complete-2020-web-development-bootcamp.txt
+echo "Done Cloning"
